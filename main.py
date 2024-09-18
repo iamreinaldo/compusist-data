@@ -54,6 +54,12 @@ class CustomerCreateIn(BaseModel):
     address : str
     contact : str
 
+class CustomerUpdateIn(BaseModel):
+    name : Optional[str] = None
+    cnpj : Optional[str] = None
+    address : Optional[str] = None
+    contact : Optional[str] = None
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -88,20 +94,19 @@ def update_user(user_id: int, user_data: UserUpdateIn, db: Session = Depends(get
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     
     if user_data.name is not None:
-        print(f'Atualizando o nome do usuário {user_id} para {user_data.name}')
         user.name = user_data.name
+
     if user_data.username is not None:
-        print(f'Atualizando o username do usuário {user_id} para {user_data.username}')
         user.username = user_data.username
+
     if user_data.password is not None:
-        print(f'Atualizando a senha do usuário {user_id} para {user_data.password}')
         user.password = user_data.password
 
 
     db.commit()
     db.refresh(user)
 
-    return user_data
+    return user
 
 
 @app.post(
@@ -125,3 +130,65 @@ def create_customer(customer_data: CustomerCreateIn, db: Session = Depends(get_d
 @app.get('/customers/')
 def list_customer(db: Session = Depends(get_db)):
     return db.query(Customers).all()
+
+@app.patch(
+        '/customers/{customer_id}',
+        response_model=NameOut,
+        summary="Edita cliente",
+        description="Edita nome, endereço, contato e cnpj do cliente")
+def update_customer(customer_id: int, customer_data: CustomerUpdateIn, db: Session = Depends(get_db)):
+    print(f"ID recebido: {customer_id}")
+    customer = db.query(Customers).filter(Customers.id == customer_id).first()
+    print(f"Resultado da consulta: {customer}")
+    if customer is None:
+        raise HTTPException(status_code=404, detail="Cliente não encontado")
+
+    if customer_data.name is not None:
+        customer.name = customer_data.name
+
+    if customer_data.address is not None:
+        customer.address = customer_data.address
+
+    if customer_data.cnpj is not None:
+        customer.cnpj = customer_data.cnpj
+
+    if customer_data.contact is not None:
+        customer.contact = customer_data.contact
+
+    db.commit()
+    db.refresh(customer)
+
+    return customer
+
+
+@app.get('/customers/{customers_id}')
+def get_customer_by_id(customers_id: int, db: Session = Depends(get_db)):
+    print(f'ID recebico: {customers_id}')
+    customer = db.query(Customers).filter(Customers.id == customers_id).first()
+
+    if customer is None:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    print(f"Resultado da consulta {customer}")
+
+    return customer
+
+@app.get('/customers/search/')
+def search_customer(query: Optional[str] = None, db: Session = Depends(get_db)):
+    if not query:
+        raise HTTPException(status_code=400, detail="O termo de busca não foi fornecido")
+    
+    results = db.query(Customers).filter(
+        (Customers.name.ilike(f'%{query}%')) |
+        (Customers.cnpj.ilike(f'%{query}%'))
+    ).all()
+
+    if not results:
+        raise HTTPException(status_code=404, detail="Nenhum cliente encontrado")
+    
+    return results
+
+
+
+
+for route in app.routes:
+    print(route.path, route.methods)
