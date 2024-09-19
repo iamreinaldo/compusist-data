@@ -76,7 +76,10 @@ def update_customer(customer_id: int, customer_data: customer_in.CustomerUpdateI
     return customer
 
 
-@router.get('/customers/{customers_id}')
+@router.get(
+        '/customers/{customers_id}',
+        summary="Lê cliente por ID",
+        description="Imprime cliente escolhido pelo ID cadastrado no banco de dados")
 def get_customer_by_id(customers_id: int, db: Session = Depends(get_db)):
     print(f'ID recebico: {customers_id}')
     customer = db.query(customers_bd.Customers).filter(customers_bd.Customers.id == customers_id).first()
@@ -87,7 +90,10 @@ def get_customer_by_id(customers_id: int, db: Session = Depends(get_db)):
 
     return customer
 
-@router.get('/customers/search/')
+@router.get(
+        '/customers/search/',
+        summary="Busca de clientes",
+        description="Busca cliente por CNPJ ou Nome")
 def search_customer(query: Optional[str] = None, db: Session = Depends(get_db)):
     if not query:
         raise HTTPException(status_code=400, detail="O termo de busca não foi fornecido")
