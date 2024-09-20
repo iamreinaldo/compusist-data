@@ -14,10 +14,11 @@ class Customers(Base):
 class CustomerAttributes(Base):     
     __tablename__ = 'customer_attributes'
     id = Column(Integer, primary_key=True, index=True)
-    custoemr_id = Column(Integer, index=True)
+    customer_id = Column(Integer, index=True)
     user_id = Column(Integer, index=True)
     network_customer = Column(Boolean, index=True)
     network = Column(String, nullable=True, index=True)
+    server_customer = Column(Boolean, index=True)
     server_addr = Column(String, nullable=True, index=True)
     server_pass = Column(String, nullable=True, index=True)
     mgmt_pass = Column(String, nullable=True, index=True)
