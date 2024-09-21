@@ -13,3 +13,8 @@ class UserUpdateIn(BaseModel):
     name: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
+
+
+class UserLogin(BaseModel):
+    username : str
+    password: str

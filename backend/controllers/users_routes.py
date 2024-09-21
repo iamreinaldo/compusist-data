@@ -12,7 +12,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = users_db.Base
 
-router = APIRouter()
+router = APIRouter(prefix='/users')
 
 def get_db():
     db = SessionLocal()
@@ -25,7 +25,7 @@ Base.metadata.create_all(bind=engine)
 
 
 @router.post(
-        '/users/',
+        '/',
         response_model=views.NameOut,
         summary="Cria usuário",
         description="Cria um novo usuário no banco",
@@ -38,14 +38,14 @@ def criar_user(user_data: users_in.UserCreateIn, db: Session = Depends(get_db)):
     return user_data
 
 @router.get(
-        '/users/', 
+        '/', 
          summary="Lista todos os usuários",
          description="Lista todos os usuários já cadastrados no banco")
 def listar_users(db: Session = Depends(get_db)):
     return db.query(users_db.Users).all()
 
 @router.patch(
-            '/users/{user_id}', 
+            '/{user_id}', 
             response_model=views.NameOut,
             summary="Edita usuário",
             description="Edita as informações de um usuário como nome, nome de usuário e senha.")
@@ -68,3 +68,15 @@ def update_user(user_id: int, user_data: users_in.UserUpdateIn, db: Session = De
     db.refresh(user)
 
     return user
+
+
+@router.post(
+        '/login/')
+async def login(user_data: users_in.UserLogin, db: Session = Depends(get_db)):
+    user = db.query(users_db.Users).filter(users_db.Users.username == user_data.username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    if user.password != user_data.password:
+        raise HTTPException(status_code=400, detail="Usuário ou senha incorreta")
+    
+    return {"message":"Login bem sucedido", "user":user.name}
