@@ -20,6 +20,7 @@ def get_db():
         yield db
     finally:
         db.close()
+        print("Sessão do banco de dados encerrada")
 
 Base.metadata.create_all(bind=engine)
 
@@ -112,8 +113,6 @@ def search_customer(query: Optional[str] = None, db: Session = Depends(get_db)):
              )
 def create_attribute(attribute_data: customer_in.CustomerAttributesIn, db: Session = Depends(get_db)):
     try:
-        print("Rota /attributes acessada")
-        print(attribute_data)
         new_attribute = customers_bd.CustomerAttributes(
                                     customer_id = attribute_data.customer_id,
                                     user_id = attribute_data.user_id,
@@ -151,29 +150,31 @@ def get_attribute_by_customer(customer_id:int, db: Session = Depends(get_db)):
         '/attributes/{customer_id}',
         response_model=views.AttributeOut)
 def update_attribute(customer_id: int, attribute_data: customer_in.CustomerUpdateIn, db: Session = Depends(get_db)):
-    attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.id == customer_id).first()
+    print(attribute_data)
+    # Use customer_id instead of id for filtering
+    attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.customer_id == customer_id).first()
     
     if attributes is None:
-        raise HTTPException(status_code=404, detail="Cliente sem atrtibuto cadastrado") 
+        raise HTTPException(status_code=404, detail="Cliente sem atributo cadastrado") 
     
-    columns = ['user_id','network_customer', 'network', 'server_customer', 'server_addr', 'server_pass', 
-               'mgmt_pass','ip_list', 'clock_customer', 'clock_addr', 'clock_system_pass', 'tech_team']
+    columns = ['user_id', 'network_customer', 'network', 'server_customer', 'server_addr', 'server_pass', 
+               'mgmt_pass', 'ip_list', 'clock_customer', 'clock_addr', 'clock_system_pass', 'tech_team']
     
     for column in columns:
         value = getattr(attribute_data, column)
-        if value is not None:
+        if value not in [None, ""]:
             setattr(attributes, column, value)
 
-
     db.commit()
+    print("Commit executado com sucesso")
     db.refresh(attributes)
-
     
     return attributes
 
+
 @router.delete('/attributes/{customer_id}')
 def delete_attribute(customer_id: int, db: Session = Depends(get_db)):
-    attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.id == customer_id).first()
+    attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.customer_id == customer_id).first()
     db.delete(attributes)
     db.commit()
     return "Deletado com sucesso"

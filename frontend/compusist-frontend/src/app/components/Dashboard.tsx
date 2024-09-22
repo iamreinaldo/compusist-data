@@ -7,6 +7,7 @@ const Dashboard = () => {
   const [clientes, setClientes] = useState([]);
   const [busca, setBusca] = useState('');
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const buscarClientes = async () => {
@@ -29,6 +30,10 @@ const Dashboard = () => {
     router.push(`/clientes/${clienteId}`); // Redireciona para a página do cliente
   };
 
+  const filteredClientes = clientes.filter(cliente =>
+    cliente.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
@@ -39,12 +44,12 @@ const Dashboard = () => {
         <input
           type="text"
           placeholder="Buscar cliente"
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          style={{ padding: '10px', width: '100%', marginBottom: '20px' }}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ color: 'black', padding: '10px', width: '100%', marginBottom: '20px' }}
         />
         <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-          {clientes.map(cliente => (
+          {filteredClientes.map(cliente => (
             <button
               key={cliente.id}
               onClick={() => handleClientClick(cliente.id)} // Redireciona para a página do cliente
@@ -55,7 +60,7 @@ const Dashboard = () => {
           ))}
         </div>
         <button onClick={handleNewClientClick} style={{ backgroundColor: 'green', color: 'white', padding: '10px', width: '100%', borderRadius: '5px' }}>
-          + NOVO
+          + NOVO CLIENTE
         </button>
       </div>
     </div>

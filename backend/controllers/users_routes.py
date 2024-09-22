@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from models import users_db
 from schemas import users_in
 from views import views
+from services import services
 
 
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:1309@localhost:1313/compusist'
@@ -79,4 +80,6 @@ async def login(user_data: users_in.UserLogin, db: Session = Depends(get_db)):
     if user.password != user_data.password:
         raise HTTPException(status_code=400, detail="Usuário ou senha incorreta")
     
-    return {"message":"Login bem sucedido", "user":user.name}
+    access_token = services.create_acess_token(data={'sub': user.username})
+    
+    return {"access_token": access_token, "token_type": "bearer", "user": user.name}

@@ -3,3 +3,5 @@ sqlalchemy
 uvicorn
 asyncpg
 psycopg2-binary
+jose
+python-jose

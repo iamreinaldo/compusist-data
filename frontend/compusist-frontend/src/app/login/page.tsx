@@ -24,6 +24,15 @@ const LoginPage = () => {
 
       // Se o login for bem-sucedido
       setMessage('Login bem-sucedido!');
+      localStorage.setItem('authToken', data.access_token);
+
+      const token = localStorage.getItem('authToken');
+      fetch('/api/protected-route', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
       // Redireciona para a página principal após login
       setTimeout(() => {
         router.push('/'); // ou a rota que você desejar

@@ -23,6 +23,12 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onSubmit }) => {
   };
 
   return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', backgroundColor: 'black' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
+        <img src="/Logo.png" alt="Logo" style={{ height: '50px' }} />
+        <span style={{color: 'white'}}>Username</span>
+      </div>
+      <div style={{ width: '300px', backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px' }}>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white p-8 rounded shadow-md">
         <h1 className="text-2xl font-bold text-center mb-8">Cadastrar Cliente</h1>
@@ -105,6 +111,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onSubmit }) => {
           </div>
         </form>
       </div>
+    </div>
+    </div>
     </div>
   );
 };
