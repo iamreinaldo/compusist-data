@@ -79,13 +79,10 @@ def update_customer(customer_id: int, customer_data: customer_in.CustomerUpdateI
         summary="Lê cliente por ID",
         description="Imprime cliente escolhido pelo ID cadastrado no banco de dados")
 def get_customer_by_id(customers_id: int, db: Session = Depends(get_db)):
-    print(f'ID recebico: {customers_id}')
     customer = db.query(customers_bd.Customers).filter(customers_bd.Customers.id == customers_id).first()
 
     if customer is None:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
-    print(f"Resultado da consulta {customer}")
-
     return customer
 
 @router.get(
@@ -114,26 +111,32 @@ def search_customer(query: Optional[str] = None, db: Session = Depends(get_db)):
         description="Adciona um novo atributo para um cliente, informando qual o cliente e qual o usuário que adcionou"
              )
 def create_attribute(attribute_data: customer_in.CustomerAttributesIn, db: Session = Depends(get_db)):
-    new_attribute = customers_bd.CustomerAttributes(
-                                customer_id = attribute_data.customer_id,
-                                user_id = attribute_data.user_id,
-                                network_customer = attribute_data.network_customer,
-                                network = attribute_data.network,
-                                server_customer = attribute_data.server_customer,
-                                server_addr = attribute_data.server_addr,
-                                server_pass = attribute_data.server_pass,
-                                mgmt_pass = attribute_data.mgmt_pass,
-                                ip_list = attribute_data.ip_list,
-                                clock_customer = attribute_data.clock_customer,
-                                clock_addr = attribute_data.clock_addr,
-                                clock_system_pass = attribute_data.clock_system_pass,
-                                tech_team = attribute_data.tech_team
-                                )
-    
-    db.add(new_attribute)
-    db.commit()
-    db.refresh(new_attribute)
-    return new_attribute
+    try:
+        print("Rota /attributes acessada")
+        print(attribute_data)
+        new_attribute = customers_bd.CustomerAttributes(
+                                    customer_id = attribute_data.customer_id,
+                                    user_id = attribute_data.user_id,
+                                    network_customer = attribute_data.network_customer,
+                                    network = attribute_data.network,
+                                    server_customer = attribute_data.server_customer,
+                                    server_addr = attribute_data.server_addr,
+                                    server_pass = attribute_data.server_pass,
+                                    mgmt_pass = attribute_data.mgmt_pass,
+                                    ip_list = attribute_data.ip_list,
+                                    clock_customer = attribute_data.clock_customer,
+                                    clock_addr = attribute_data.clock_addr,
+                                    clock_system_pass = attribute_data.clock_system_pass,
+                                    tech_team = attribute_data.tech_team
+                                    )
+        
+        db.add(new_attribute)
+        db.commit()
+        db.refresh(new_attribute)
+        return new_attribute
+    except Exception as e:
+        print(f"Erro: {str(e)}")
+        raise HTTPException(status_code=422, detail=str(e))
 
 @router.get('/attributes/{customer_id}')
 def get_attribute_by_customer(customer_id:int, db: Session = Depends(get_db)):

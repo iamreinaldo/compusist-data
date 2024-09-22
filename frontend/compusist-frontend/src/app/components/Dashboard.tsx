@@ -1,8 +1,7 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-
 
 const Dashboard = () => {
   const [clientes, setClientes] = useState([]);
@@ -23,7 +22,11 @@ const Dashboard = () => {
   }, [busca]);
 
   const handleNewClientClick = () => {
-    router.push('/add-client'); // Use o método push para redirecionar
+    router.push('/add-client'); // Redireciona para a página de cadastro de novo cliente
+  };
+
+  const handleClientClick = (clienteId) => {
+    router.push(`/clientes/${clienteId}`); // Redireciona para a página do cliente
   };
 
   return (
@@ -44,7 +47,7 @@ const Dashboard = () => {
           {clientes.map(cliente => (
             <button
               key={cliente.id}
-              onClick={() => console.log('Cliente clicado:', cliente.id)}
+              onClick={() => handleClientClick(cliente.id)} // Redireciona para a página do cliente
               style={{ display: 'block', padding: '10px', marginBottom: '10px', width: '100%', textAlign: 'left', color: 'black' }}
             >
               {cliente.name}
@@ -52,8 +55,8 @@ const Dashboard = () => {
           ))}
         </div>
         <button onClick={handleNewClientClick} style={{ backgroundColor: 'green', color: 'white', padding: '10px', width: '100%', borderRadius: '5px' }}>
-        + NOVO
-      </button>
+          + NOVO
+        </button>
       </div>
     </div>
   );
