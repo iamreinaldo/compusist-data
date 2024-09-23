@@ -11,6 +11,7 @@ const ClientePage = () => {
   const [errorMessage, setErrorMessage] = useState(''); // Estado para mensagem de erro
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // Estado para o modo de edição
+  const token = localStorage.getItem('access_token')
   const [formData, setFormData] = useState({
     network_customer: false,
     network: '',
@@ -32,11 +33,19 @@ const ClientePage = () => {
     if (clienteId) {
       const fetchCliente = async () => {
         try {
-          const responseCliente = await axios.get(`http://localhost:8000/customers/${clienteId}`);
+          const responseCliente = await axios.get(`http://localhost:8000/customers/${clienteId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
+            }
+          });
           setCliente(responseCliente.data);
           
           // Buscar os atributos do cliente
-          const responseAtributos = await axios.get(`http://localhost:8000/customers/attributes/${clienteId}`);
+          const responseAtributos = await axios.get(`http://localhost:8000/customers/attributes/${clienteId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
+            }
+          });
           if (responseAtributos.status === 200) {
             setAtributos(responseAtributos.data); // Atributos encontrados
 
@@ -84,6 +93,9 @@ const ClientePage = () => {
           ...formData,
           customer_id: Number(clienteId), // Inclua o customer_id e outros campos necessários
           user_id: 1, // Inclua o user_id, se necessário
+          headers:{
+            'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
+          }
         });
         
         // Verifique se a requisição foi bem-sucedida antes de recarregar
@@ -95,6 +107,9 @@ const ClientePage = () => {
           ...formData,
           customer_id: Number(clienteId),
           user_id: 1, // Ajuste conforme necessário
+          headers:{
+            'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
+          }
         });
         
         // Verifique se a requisição foi bem-sucedida antes de recarregar
