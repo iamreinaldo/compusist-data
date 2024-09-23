@@ -6,6 +6,7 @@ from typing import Optional
 from models import customers_bd
 from schemas import customer_in
 from views import views
+from services import services
 
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:1309@localhost:1313/compusist'
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -30,7 +31,7 @@ Base.metadata.create_all(bind=engine)
         response_model=views.NameOut,
         summary="Cadastra cliente",
         description="Cadastar um novo cliente")
-def create_customer(customer_data: customer_in.CustomerCreateIn, db: Session = Depends(get_db)):
+def create_customer(customer_data: customer_in.CustomerCreateIn, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     new_customer = customers_bd.Customers(
                             name=customer_data.name,
                             cnpj=customer_data.cnpj,
@@ -52,7 +53,7 @@ def list_customer(db: Session = Depends(get_db)):
         response_model=views.NameOut,
         summary="Edita cliente",
         description="Edita nome, endereço, contato e cnpj do cliente")
-def update_customer(customer_id: int, customer_data: customer_in.CustomerUpdateIn, db: Session = Depends(get_db)):
+def update_customer(customer_id: int, customer_data: customer_in.CustomerUpdateIn, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     customer = db.query(customers_bd.Customers).filter(customers_bd.Customers.id == customer_id).first()
     if customer is None:
         raise HTTPException(status_code=404, detail="Cliente não encontado")
@@ -79,7 +80,7 @@ def update_customer(customer_id: int, customer_data: customer_in.CustomerUpdateI
         '/{customers_id}',
         summary="Lê cliente por ID",
         description="Imprime cliente escolhido pelo ID cadastrado no banco de dados")
-def get_customer_by_id(customers_id: int, db: Session = Depends(get_db)):
+def get_customer_by_id(customers_id: int, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     customer = db.query(customers_bd.Customers).filter(customers_bd.Customers.id == customers_id).first()
 
     if customer is None:
@@ -111,7 +112,7 @@ def search_customer(query: Optional[str] = None, db: Session = Depends(get_db)):
         summary="Adciona atributo",
         description="Adciona um novo atributo para um cliente, informando qual o cliente e qual o usuário que adcionou"
              )
-def create_attribute(attribute_data: customer_in.CustomerAttributesIn, db: Session = Depends(get_db)):
+def create_attribute(attribute_data: customer_in.CustomerAttributesIn, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     try:
         new_attribute = customers_bd.CustomerAttributes(
                                     customer_id = attribute_data.customer_id,
@@ -138,7 +139,7 @@ def create_attribute(attribute_data: customer_in.CustomerAttributesIn, db: Sessi
         raise HTTPException(status_code=422, detail=str(e))
 
 @router.get('/attributes/{customer_id}')
-def get_attribute_by_customer(customer_id:int, db: Session = Depends(get_db)):
+def get_attribute_by_customer(customer_id:int, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.customer_id == customer_id).first()
 
     if attributes is None:
@@ -149,7 +150,7 @@ def get_attribute_by_customer(customer_id:int, db: Session = Depends(get_db)):
 @router.patch(
         '/attributes/{customer_id}',
         response_model=views.AttributeOut)
-def update_attribute(customer_id: int, attribute_data: customer_in.CustomerUpdateIn, db: Session = Depends(get_db)):
+def update_attribute(customer_id: int, attribute_data: customer_in.CustomerUpdateIn, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     print(attribute_data)
     # Use customer_id instead of id for filtering
     attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.customer_id == customer_id).first()
@@ -173,7 +174,7 @@ def update_attribute(customer_id: int, attribute_data: customer_in.CustomerUpdat
 
 
 @router.delete('/attributes/{customer_id}')
-def delete_attribute(customer_id: int, db: Session = Depends(get_db)):
+def delete_attribute(customer_id: int, db: Session = Depends(get_db), current_user: dict = Depends(services.get_current_user)):
     attributes = db.query(customers_bd.CustomerAttributes).filter(customers_bd.CustomerAttributes.customer_id == customer_id).first()
     db.delete(attributes)
     db.commit()

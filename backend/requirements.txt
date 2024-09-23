@@ -5,3 +5,5 @@ asyncpg
 psycopg2-binary
 jose
 python-jose
+bcrypt
+passlib

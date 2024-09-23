@@ -1,5 +1,6 @@
 import CustomerForm from '../src/app/components/CustomerForm';
 import { useRouter } from 'next/navigation';
+import withAuth from '@/app/withAuth';
 
 const AddClient = () => {
     const router = useRouter();
@@ -9,6 +10,7 @@ const AddClient = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization':`Bearer ${localStorage.getItem('access_token')}`,
           },
           body: JSON.stringify(customerData),
         });
@@ -33,4 +35,4 @@ const AddClient = () => {
 };
 
 
-export default AddClient;
+export default withAuth(AddClient);

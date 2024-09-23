@@ -1,10 +1,17 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 SECRET_KEY = 'secret_compusist'
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 def create_acess_token(data: dict):
     to_encode = data.copy()
@@ -19,4 +26,16 @@ def verify_access_token(token: str):
         return payload
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido")
+    
+def verify_password(plain_passowrd, hashed_password):
+    return pwd_context.verify(plain_passowrd, hashed_password)
 
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = verify_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="TOken inválido ou expirado")
+    return payload

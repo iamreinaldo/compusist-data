@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
+
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -12,8 +13,15 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(!username) {
+      setMessage('Por favor, preencha o nome de usuário')
+      setIsSubmitting(false)      
+      return;
+    }
+    
     setIsSubmitting(true);
     const userData = { username, password };
+
 
     try {
       const response = await axios.post('http://localhost:8000/users/login/', userData, {
@@ -22,21 +30,18 @@ const LoginPage = () => {
         },
       });
 
-      // Se o login for bem-sucedido
-      setMessage('Login bem-sucedido!');
-      localStorage.setItem('authToken', data.access_token);
+      const {access_token, user} = response.data;
 
-      const token = localStorage.getItem('authToken');
-      fetch('/api/protected-route', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      if (access_token) {
+        // Se o login for bem-sucedido
+        setMessage(`Bem vindo, ${user}!`);
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('user_name', user);
+        setTimeout(() => {
+          router.push('/');
+        }, 2000);
 
-      // Redireciona para a página principal após login
-      setTimeout(() => {
-        router.push('/'); // ou a rota que você desejar
-      }, 2000);
+      } 
     } catch (error) {
       // Se o usuário não for encontrado, redireciona para a página de cadastro
       if (error.response && error.response.status === 404) {

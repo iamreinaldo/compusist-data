@@ -2,14 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import withAuth from '../withAuth';
 
 const Dashboard = () => {
   const [clientes, setClientes] = useState([]);
   const [busca, setBusca] = useState('');
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
+
+    const storedName = localStorage.getItem('user_name');
+    if (storedName){
+      setName(storedName)
+    }
+
     const buscarClientes = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/customers/`);
@@ -34,11 +42,17 @@ const Dashboard = () => {
     cliente.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleUserClick = () => {
+    router.push('/user');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
         <img src="/path_to_logo.png" alt="Logo" style={{ height: '50px' }} />
-        <span>Username</span>
+        <div>
+          <p>Olá, <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{name}</span></p>
+        </div>
       </div>
       <div style={{ width: '300px', backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px' }}>
         <input
@@ -67,4 +81,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);
