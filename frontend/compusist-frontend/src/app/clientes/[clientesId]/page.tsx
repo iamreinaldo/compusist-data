@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
+import withAuth from '@/app/withAuth';
 
 const ClientePage = () => {
   const [cliente, setCliente] = useState(null);
@@ -363,4 +364,4 @@ const ClientePage = () => {
   );
 };
 
-export default ClientePage;
+export default withAuth(ClientePage);

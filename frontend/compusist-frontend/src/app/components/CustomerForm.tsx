@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import withAuth from '../withAuth';
 
 interface CustomerFormProps {
   onSubmit: (customerData: {
@@ -117,4 +118,4 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onSubmit }) => {
   );
 };
 
-export default CustomerForm;
+export default withAuth(CustomerForm);

@@ -27,18 +27,26 @@ const RegisterPage = () => {
     const userData = { name, username, password };
 
     try {
-      const response = await axios.post('http://localhost:8000/users/', userData, {
+      const response = await fetch('http://localhost:8000/users/',{
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
+        body: JSON.stringify(userData),
       });
+      if (response.ok) {
+        setMessage('Usuário cadastrado com sucesso!');
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        setMessage(`Erro ao cadastrar o usuário: ${errorData.detail}`)
+        
+      }
 
-      setMessage('Usuário cadastrado com sucesso!');
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
     } catch (error) {
-      setMessage('Erro ao cadastrar o usuário. Tente novamente.');
+      setMessage(`Erro ao cadastrar o usuário. Tente novamente.`);
     } finally {
       setIsSubmitting(false);
     }

@@ -30,13 +30,14 @@ const LoginPage = () => {
         },
       });
 
-      const {access_token, user} = response.data;
+      const {access_token, user, id} = response.data;
 
       if (access_token) {
         // Se o login for bem-sucedido
         setMessage(`Bem vindo, ${user}!`);
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('user_name', user);
+        localStorage.setItem('id', id);
         setTimeout(() => {
           router.push('/');
         }, 2000);

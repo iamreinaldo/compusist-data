@@ -32,6 +32,9 @@ Base.metadata.create_all(bind=engine)
         description="Cria um novo usuário no banco",
         )
 def criar_user(user_data: users_in.UserCreateIn, db: Session = Depends(get_db)):
+    existing_user = db.query(users_db.Users).filter(users_db.Users.username == user_data.username).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username já está em uso")
     hashed_password = services.get_password_hash(user_data.password)
     novo_user = users_db.Users(name=user_data.name, username=user_data.username, password=hashed_password)
     db.add(novo_user)
@@ -56,14 +59,19 @@ def update_user(user_id: int, user_data: users_in.UserUpdateIn, db: Session = De
     if user is None:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     
+    
     if user_data.name is not None:
         user.name = user_data.name
 
     if user_data.username is not None:
+        existing_user = db.query(users_db.Users).filter(users_db.Users.username == user_data.username).first()
+        if existing_user and existing_user.id != user_id:
+            raise HTTPException(status_code=400, detail="Username já está em uso")
         user.username = user_data.username
 
     if user_data.password is not None:
-        user.password = user_data.password
+        hashed_password = services.get_password_hash(user_data.password)
+        user.password = hashed_password
 
 
     db.commit()
@@ -89,5 +97,6 @@ async def login(user_data: users_in.UserLogin, db: Session = Depends(get_db)):
         "access_token": access_token,
         "token_type": "bearer",
         "user": user.name,
+        "id": user.id,
         "expires_in": services.ACCESS_TOKEN_EXPIRE_MINUTES*60
         }

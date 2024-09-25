@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import withAuth from '@/app/withAuth';
 
 const UserPage = () => {
   const [name, setName] = useState('');
@@ -13,7 +14,7 @@ const UserPage = () => {
   useEffect(() => {
     // Carregar o nome de usuário e o userId do localStorage
     const storedName = localStorage.getItem('user_name');
-    const storedUserId = localStorage.getItem('user_id');
+    const storedUserId = localStorage.getItem('id');
 
     if (storedName) {
       setName(storedName);
@@ -45,7 +46,7 @@ const UserPage = () => {
           setMessage('Username alterado com sucesso!'); // Exibe a mensagem de sucesso
         } else {
           const errorData = await response.json();
-          setMessage(`Erro ao alterar o username: ${errorData.message}`); // Exibe a mensagem de erro
+          setMessage(`Erro ao alterar o username: ${errorData.detail}`); // Exibe a mensagem de erro
         }
       } catch (error) {
         setMessage('Erro ao conectar ao servidor.'); // Exibe a mensagem de erro
@@ -85,7 +86,7 @@ const UserPage = () => {
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_name');
-    localStorage.removeItem('user_id');
+    localStorage.removeItem('id');
     router.push('/login'); // Redireciona para a página de login
   };
 
@@ -132,4 +133,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default withAuth(UserPage);
