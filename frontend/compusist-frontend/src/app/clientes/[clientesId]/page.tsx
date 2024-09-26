@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import Link from 'next/link';
 import withAuth from '@/app/withAuth';
 
 const ClientePage = () => {
@@ -16,6 +15,7 @@ const ClientePage = () => {
   const router = useRouter();
   const token = localStorage.getItem('access_token');
   const nome_usuario = localStorage.getItem('user_name');
+  const user_id = localStorage.getItem('id');
   const [formData, setFormData] = useState({
     network_customer: false,
     network: '',
@@ -23,14 +23,12 @@ const ClientePage = () => {
     server_addr: '',
     server_pass: '',
     mgmt_pass: '',
-    ip_list: {},
+    ip_list: '',
     clock_customer: false,
     clock_addr: '',
     clock_system_pass: '',
     tech_team: false,
   });
-
-  const [ipListEntries, setIpListEntries] = useState([{ description:'', ip:''}])
 
   const params = useParams(); 
   const clienteId = params?.clientesId;
@@ -54,9 +52,6 @@ const ClientePage = () => {
           });
           if (responseAtributos.status === 200) {
             setAtributos(responseAtributos.data); // Atributos encontrados
-            setIpListEntries(
-              Object.entries(responseAtributos.data.ip_list || {}).map(([description, ip]) => ({description, ip}))
-            )
 
           } else {
             setAtributos([]); // Nenhum atributo encontrado
@@ -93,37 +88,28 @@ const ClientePage = () => {
     }));
   };
 
-  const handleIpListChange = (index, field, value) => {
-    const updatedIpList = [...ipListEntries];
-    updatedIpList[index][field] = value;
-    setIpListEntries(updatedIpList);
-  };
-
-  const handleAddIpField = () => {
-    setIpListEntries([...ipListEntries, { description: '', ip: '' }]);
-  };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const ipListObject = ipListEntries.reduce((obj, entry) => {
-      if (entry.description && entry.ip) {
-        obj[entry.description] = entry.ip;
-      }
-      return obj;
-    }, {});
+    const sanitizedFormData = Object.fromEntries(
+      Object.entries(formData).filter(([key, value]) => value !== '')
+    );
+
   
     try {
       if (isEditing) {
-        const response = await axios.patch(`http://localhost:8000/customers/attributes/${clienteId}`, {
-          ...formData,
-          customer_id: Number(clienteId), // Inclua o customer_id e outros campos necessários
-          user_id: 1,
-          ip_list: ipListObject,
+        const response = await fetch(`http://localhost:8000/customers/attributes/${clienteId}`, {
+          method: 'PATCH',
           headers:{
-            'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
-          }
+            'Authorization': `Bearer ${token}`, // Adiciona o token ao cabeçalho
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify({ 
+          ...sanitizedFormData,
+          customer_id: Number(clienteId), // Inclua o customer_id e outros campos necessários
+          user_id: Number(user_id),
+        }),
         });
         
         // Verifique se a requisição foi bem-sucedida antes de recarregar
@@ -131,14 +117,17 @@ const ClientePage = () => {
           window.location.reload(); // Recarregar a página após sucesso
         }
       } else {
-        const response = await axios.post('http://localhost:8000/customers/attributes', {
-          ...formData,
-          customer_id: Number(clienteId),
-          user_id: 1, // Ajuste conforme necessário
-          ip_list: ipListObject,
+        const response = await fetch('http://localhost:8000/customers/attributes', {
+          method: 'POST',
           headers:{
-            'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
-          }
+            'Authorization': `Bearer ${token}`, // Adiciona o token ao cabeçalho
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify({
+            ...sanitizedFormData,
+            customer_id: Number(clienteId),
+            user_id: Number(user_id), // Ajuste conforme necessário
+          }),
         });
         
         // Verifique se a requisição foi bem-sucedida antes de recarregar

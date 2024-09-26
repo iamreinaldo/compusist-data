@@ -37,5 +37,5 @@ def get_password_hash(password):
 def get_current_user(token: str = Depends(oauth2_scheme)):
     payload = verify_access_token(token)
     if payload is None:
-        raise HTTPException(status_code=401, detail="TOken inválido ou expirado")
+        raise HTTPException(status_code=401, detail="Token inválido ou expirado")
     return payload
