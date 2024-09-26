@@ -90,6 +90,10 @@ const UserPage = () => {
     router.push('/login'); // Redireciona para a página de login
   };
 
+  const handleGoBack = () => {
+    router.push('/')
+  }
+
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
       <h1>{name}</h1>
@@ -128,6 +132,7 @@ const UserPage = () => {
       )}
 
       {/* Botão de logout */}
+      <button onClick={handleGoBack} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'gray', color: 'white' }}>Voltar</button>
       <button onClick={handleLogout} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'red', color: 'white' }}>Logout</button>
     </div>
   );

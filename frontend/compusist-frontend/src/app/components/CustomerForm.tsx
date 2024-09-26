@@ -1,6 +1,6 @@
 "use client";
-
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import withAuth from '../withAuth';
 
 interface CustomerFormProps {
@@ -17,17 +17,25 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onSubmit }) => {
   const [cnpj, setCnpj] = useState('');
   const [contact, setContact] = useState('');
   const [address, setAddress] = useState('');
+  const nome_usuario = localStorage.getItem('user_name')
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ name, cnpj, contact, address });
   };
 
+  const handleUserClick = () => {
+    router.push('/user');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', backgroundColor: 'black' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
         <img src="/Logo.png" alt="Logo" style={{ height: '50px' }} />
-        <span style={{color: 'white'}}>Username</span>
+        <div>
+        <span onClick={handleUserClick} style={{color: 'green', cursor: 'pointer'}}>{nome_usuario}</span>
+        </div>
       </div>
       <div style={{ width: '300px', backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px' }}>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
