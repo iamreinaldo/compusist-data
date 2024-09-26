@@ -32,6 +32,8 @@ Base.metadata.create_all(bind=engine)
         description="Cria um novo usuário no banco",
         )
 def criar_user(user_data: users_in.UserCreateIn, db: Session = Depends(get_db)):
+    if ' ' in user_data.username:
+        raise HTTPException(status_code=400, detail="Username não pode conter espaços")
     existing_user = db.query(users_db.Users).filter(users_db.Users.username == user_data.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username já está em uso")
@@ -55,6 +57,9 @@ def listar_users(db: Session = Depends(get_db)):
             summary="Edita usuário",
             description="Edita as informações de um usuário como nome, nome de usuário e senha.")
 def update_user(user_id: int, user_data: users_in.UserUpdateIn, db: Session = Depends(get_db)):
+    if ' ' in user_data.username:
+        raise HTTPException(status_code=400, detail="Username não pode conter espaços")
+    
     user = db.query(users_db.Users).filter(users_db.Users.id == user_id).first()
     if user is None:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")

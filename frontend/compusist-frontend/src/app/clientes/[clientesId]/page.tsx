@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Link from 'next/link';
 import withAuth from '@/app/withAuth';
@@ -12,7 +13,9 @@ const ClientePage = () => {
   const [errorMessage, setErrorMessage] = useState(''); // Estado para mensagem de erro
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false); // Estado para o modo de edição
-  const token = localStorage.getItem('access_token')
+  const router = useRouter();
+  const token = localStorage.getItem('access_token');
+  const nome_usuario = localStorage.getItem('user_name');
   const [formData, setFormData] = useState({
     network_customer: false,
     network: '',
@@ -20,12 +23,14 @@ const ClientePage = () => {
     server_addr: '',
     server_pass: '',
     mgmt_pass: '',
-    ip_list: '',
+    ip_list: {},
     clock_customer: false,
     clock_addr: '',
     clock_system_pass: '',
     tech_team: false,
   });
+
+  const [ipListEntries, setIpListEntries] = useState([{ description:'', ip:''}])
 
   const params = useParams(); 
   const clienteId = params?.clientesId;
@@ -49,6 +54,9 @@ const ClientePage = () => {
           });
           if (responseAtributos.status === 200) {
             setAtributos(responseAtributos.data); // Atributos encontrados
+            setIpListEntries(
+              Object.entries(responseAtributos.data.ip_list || {}).map(([description, ip]) => ({description, ip}))
+            )
 
           } else {
             setAtributos([]); // Nenhum atributo encontrado
@@ -85,15 +93,34 @@ const ClientePage = () => {
     }));
   };
 
+  const handleIpListChange = (index, field, value) => {
+    const updatedIpList = [...ipListEntries];
+    updatedIpList[index][field] = value;
+    setIpListEntries(updatedIpList);
+  };
+
+  const handleAddIpField = () => {
+    setIpListEntries([...ipListEntries, { description: '', ip: '' }]);
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const ipListObject = ipListEntries.reduce((obj, entry) => {
+      if (entry.description && entry.ip) {
+        obj[entry.description] = entry.ip;
+      }
+      return obj;
+    }, {});
   
     try {
       if (isEditing) {
         const response = await axios.patch(`http://localhost:8000/customers/attributes/${clienteId}`, {
           ...formData,
           customer_id: Number(clienteId), // Inclua o customer_id e outros campos necessários
-          user_id: 1, // Inclua o user_id, se necessário
+          user_id: 1,
+          ip_list: ipListObject,
           headers:{
             'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
           }
@@ -108,6 +135,7 @@ const ClientePage = () => {
           ...formData,
           customer_id: Number(clienteId),
           user_id: 1, // Ajuste conforme necessário
+          ip_list: ipListObject,
           headers:{
             'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
           }
@@ -157,6 +185,14 @@ const ClientePage = () => {
       }
     }
   };
+
+  const handleUserClick = () => {
+    router.push('/user');
+  };
+
+  const handleLogoClick = () => {
+    router.push('/');
+  };
   
 
   if (loading) {
@@ -164,10 +200,10 @@ const ClientePage = () => {
     return( 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-        <Link href={"/"}>
-        <img src="../../../Logo.png" alt="Logo" style={{ height: '50px' }}  />
-        </Link>
-        <span>Username</span>
+        <img src="Logo.png" onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
+        <div>
+          <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
+        </div>
       </div>
       <div>Carregando...</div>
       </div>
@@ -178,8 +214,10 @@ const ClientePage = () => {
     return(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-        <img src="/path_to_logo.png" alt="Logo" style={{ height: '50px' }} />
-        <span>Username</span>
+        <img src="Logo.png" onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }} />
+        <div>
+          <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
+        </div>
         </div>
         <div>Cliente não encontrado</div>
       </div>
@@ -188,8 +226,10 @@ const ClientePage = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-      <img src="/path_to_logo.png" alt="Logo" style={{ height: '50px' }} />
-      <span>Username</span>
+      <img src="Logo.png" onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }} />
+      <div>
+        <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
+      </div>
     </div>
     <div>
       <h1><strong>{cliente.name}</strong></h1>
