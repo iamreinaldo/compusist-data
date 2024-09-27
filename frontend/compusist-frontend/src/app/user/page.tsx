@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import withAuth from '@/app/withAuth';
+import withAuth from '@/app/components/withAuth';
 
 const UserPage = () => {
   const [name, setName] = useState('');

@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import withAuth from '../withAuth';
+import withAuth from './withAuth';
+import Image from 'next/image';
+import logo from "../Logo.png"
 
 const Dashboard = () => {
   const [clientes, setClientes] = useState([]);
@@ -46,10 +48,15 @@ const Dashboard = () => {
     router.push('/user');
   };
 
+  const handleLogoClick = () => {
+    router.push('/');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
+      <title>Dashboard</title>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-        <img src="/path_to_logo.png" alt="Logo" style={{ height: '50px' }} />
+        <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
         <div>
           <p>Olá, <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{name}</span></p>
         </div>

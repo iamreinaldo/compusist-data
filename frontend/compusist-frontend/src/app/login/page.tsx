@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -9,7 +9,21 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if(token) {
+      router.push('/');
+    } else {
+      setIsCheckingAuth(false)
+    }
+  }, [router])
+
+  if (isCheckingAuth){
+    return null
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

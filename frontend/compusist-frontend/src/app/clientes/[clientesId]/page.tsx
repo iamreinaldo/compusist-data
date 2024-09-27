@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import withAuth from '@/app/withAuth';
+import Image from 'next/image';
+import logo from "../../Logo.png"
+import withAuth from '@/app/components/withAuth';
 
 const ClientePage = () => {
   const [cliente, setCliente] = useState(null);
@@ -71,6 +73,12 @@ const ClientePage = () => {
       setLoading(false);
     }
   }, [clienteId]);
+
+  useEffect(() => {
+    if(cliente) {
+      document.title = `Compusist - ${cliente.name}`
+    }
+  }, [cliente])
 
   const handleAddInfoClick = () => {
     setShowForm(true);
@@ -189,7 +197,7 @@ const ClientePage = () => {
     return( 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-        <img src="Logo.png" onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
+        <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
         <div>
           <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
         </div>
@@ -203,8 +211,8 @@ const ClientePage = () => {
     return(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-        <img src="Logo.png" onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }} />
-        <div>
+      <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
+      <div>
           <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
         </div>
         </div>
@@ -215,8 +223,8 @@ const ClientePage = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-      <img src="Logo.png" onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }} />
-      <div>
+    <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
+    <div>
         <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
       </div>
     </div>
