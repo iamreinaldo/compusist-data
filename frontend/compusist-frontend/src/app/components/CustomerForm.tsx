@@ -36,8 +36,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="bg-black min-h-screen flex flex-col items-center justify-center">
-      <h1 className='text-black text-2xl font-bold mb-4'>Cadastro de cliente</h1>
+    <div className="bg-#f5f5f5 min-h-screen flex flex-col items-center justify-center">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
         <Image src={logo} onClick={handleLogoClick} alt="Logo" className="absolute top-4 left-4 cursor-pointer" />
         <div className='absolute top-4 right-4 flex items-center space-x-2 cursor-pointer' onClick={handleUserClick}>

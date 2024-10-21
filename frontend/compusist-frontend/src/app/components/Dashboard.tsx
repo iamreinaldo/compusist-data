@@ -12,6 +12,8 @@ const Dashboard = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [name, setName] = useState('');
+  const nome_usuario = localStorage.getItem('user_name')
+
 
   useEffect(() => {
 
@@ -57,8 +59,13 @@ const Dashboard = () => {
       <title>Dashboard</title>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
         <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
-        <div>
-          <p>Olá, <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{name}</span></p>
+        <div className='absolute top-4 right-4 flex items-center space-x-2 cursor-pointer' onClick={handleUserClick}>        
+        <div className='flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white font-bold'>
+        {nome_usuario ? nome_usuario.charAt(0).toUpperCase() : ''}
+        </div>
+        <span onClick={handleUserClick} className="font-medium cursor-pointer hover:underline text-white font-bold">
+            {nome_usuario}
+        </span>
         </div>
       </div>
       <div style={{ width: '300px', backgroundColor: '#f5f5f5', padding: '20px', borderRadius: '8px' }}>
@@ -80,7 +87,7 @@ const Dashboard = () => {
             </button>
           ))}
         </div>
-        <button onClick={handleNewClientClick} style={{ backgroundColor: 'green', color: 'white', padding: '10px', width: '100%', borderRadius: '5px' }}>
+        <button className="bg-green-500 hover:bg-green-600" onClick={handleNewClientClick} style={{color: 'white', padding: '10px', width: '100%', borderRadius: '5px' }}>
           + NOVO CLIENTE
         </button>
       </div>
