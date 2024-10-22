@@ -197,10 +197,15 @@ const ClientePage = () => {
     return( 
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-        <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
-        <div>
-          <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
-        </div>
+      <Image src={logo} onClick={handleLogoClick} alt="Logo" className="absolute top-4 left-4 cursor-pointer" />
+      <div className='absolute top-4 right-4 flex items-center space-x-2 cursor-pointer' onClick={handleUserClick}>
+      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white font-bold'>
+          {nome_usuario ? nome_usuario.charAt(0).toUpperCase() : ''}
+      </div>
+      <span onClick={handleUserClick} className="font-medium cursor-pointer hover:underline text-white font-bold">
+            {nome_usuario}
+            </span>
+      </div>
       </div>
       <div>Carregando...</div>
       </div>
@@ -211,9 +216,14 @@ const ClientePage = () => {
     return(
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-      <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
-      <div>
-          <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
+      <Image src={logo} onClick={handleLogoClick} alt="Logo" className="absolute top-4 left-4 cursor-pointer" />
+      <div className='absolute top-4 right-4 flex items-center space-x-2 cursor-pointer' onClick={handleUserClick}>
+      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white font-bold'>
+          {nome_usuario ? nome_usuario.charAt(0).toUpperCase() : ''}
+      </div>
+      <span onClick={handleUserClick} className="font-medium cursor-pointer hover:underline text-white font-bold">
+            {nome_usuario}
+            </span>
         </div>
         </div>
         <div>Cliente não encontrado</div>
@@ -223,12 +233,17 @@ const ClientePage = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
-    <Image src={logo} onClick={handleLogoClick}  alt="Logo" style={{ height: '50px', cursor: 'pointer' }}  />
-    <div>
-        <span onClick={handleUserClick} style={{cursor:'pointer', color:'green'}}>{nome_usuario}</span>
+    <Image src={logo} onClick={handleLogoClick} alt="Logo" className="absolute top-4 left-4 cursor-pointer" />
+    <div className='absolute top-4 right-4 flex items-center space-x-2 cursor-pointer' onClick={handleUserClick}>
+      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white font-bold'>
+          {nome_usuario ? nome_usuario.charAt(0).toUpperCase() : ''}
+      </div>
+      <span onClick={handleUserClick} className="font-medium cursor-pointer hover:underline text-white font-bold">
+            {nome_usuario}
+            </span>
       </div>
     </div>
-    <div>
+    <div className='text-gray-700' style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
       <h1><strong>{cliente.name}</strong></h1>
       <p><strong>CNPJ:</strong> {cliente.cnpj}</p>
       <p><strong>Contato:</strong> {cliente.contact}</p>
@@ -240,11 +255,12 @@ const ClientePage = () => {
 
       {/* Se o cliente tiver atributos, exibi-los */}
       {atributos ? (
-        <div style={{ width: '300px', backgroundColor: '#000000', padding: '20px', borderRadius: '8px' }}>
+        <div style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
         <div>
           <br />
-          <h2>Informações do Cliente</h2>
-          <ul>
+          <h2 className='text-gray-700'><strong>Informações do Cliente</strong></h2>
+          <br/>
+          <ul className='text-gray-700'>
             {/* Exibir os atributos corretamente */}
             <li><strong>É cliente de redes?:</strong> {atributos.network_customer ? 'Sim' : 'Não'}</li>
             <li><strong>Configuração de rede:</strong> {atributos.network}</li>
@@ -259,21 +275,36 @@ const ClientePage = () => {
             <li><strong>Tem equipe técnica?:</strong> {atributos.tech_team ? 'Sim' : 'Não'}</li>
           </ul>
           <br />
-          <button onClick={handleEditInfoClick}>Editar informações</button>
-          <br />
-          <button onClick={handleDelete}>Deletar informações</button>
+          <div className="flex justify-between space-x-1">
+          <button
+                  type="button"
+                  onClick={handleEditInfoClick}
+                  className="px-6 py-2 bg-gray-400 text-white rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                  Editar informações
+          </button>
+          <button
+                  type="submit"
+                  onClick={handleDelete}
+                  className="px-6 py-2 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Deletar informações
+          </button>
+            </div>
         </div>
         </div>
       ) : (
         // Caso não tenha atributos, exibir o botão para adicionar
-        <button onClick={handleAddInfoClick}>
+        <button onClick={handleAddInfoClick}
+        className="px-6 py-2 bg-gray-400 text-white rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+>
           Adicionar informações
         </button>
       )}
 
       {showForm && (
-        <div style={{ width: '300px', backgroundColor: '#000000', padding: '20px', borderRadius: '8px' }}>
-        <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
+        <div style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
+        <form className='text-gray-700' onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
           <label>
             É um cliente de redes? (Network Customer):
             <input
@@ -391,10 +422,23 @@ const ClientePage = () => {
             />
           </label>
           <br />
-          <button type="submit">Enviar</button>
           <br />
-          <button type="button" onClick={handleCancel}>Cancelar</button>
-        </form>
+          <div className="flex justify-between space-x-1">
+          <button
+                  type="button"
+                  onClick={() => history.back()}
+                  className="px-6 py-2 bg-gray-400 text-white rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                  Voltar
+          </button>
+          <button
+                  type="submit"
+                  className="px-6 py-2 bg-green-500 text-white rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Salvar
+          </button>
+            </div>
+          </form>
         </div>
       )}
     </div>
