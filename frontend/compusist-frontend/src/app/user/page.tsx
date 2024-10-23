@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import withAuth from '@/app/components/withAuth';
+import Image from 'next/image';
+import logo from "../Logo.png"
 
 const UserPage = () => {
   const [name, setName] = useState('');
@@ -9,6 +11,7 @@ const UserPage = () => {
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState(''); // Estado para mensagens
+  const nome_usuario = localStorage.getItem('user_name')
   const router = useRouter();
 
   useEffect(() => {
@@ -94,10 +97,29 @@ const UserPage = () => {
     router.push('/')
   }
 
-  return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>{name}</h1>
+  const handleUserClick = () => {
+    router.push('/user');
+  };
 
+  const handleLogoClick = () => {
+    router.push('/');
+  };
+
+
+  return (
+    <div className="bg-#f5f5f5 min-h-screen flex flex-col items-center justify-center">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '20px' }}>
+        <Image src={logo} onClick={handleLogoClick} alt="Logo" className="absolute top-4 left-4 cursor-pointer" />
+        <div className='absolute top-4 right-4 flex items-center space-x-2 cursor-pointer' onClick={handleUserClick}>
+        <div className='flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white font-bold'>
+          {nome_usuario ? nome_usuario.charAt(0).toUpperCase() : ''}
+        </div>
+        <span onClick={handleUserClick} className="font-medium cursor-pointer hover:underline text-white font-bold">
+          {nome_usuario}
+        </span>
+    </div>
+    </div>
+    <div style={{ textAlign: 'center', marginTop: '50px', backgroundColor: '#ffffff', borderRadius: '8px', width: '300px'}}>
       {/* Campo para editar o nome de usuário */}
       <div style={{ marginBottom: '20px' }}>
         <label>Alterar Username:</label>
@@ -108,11 +130,11 @@ const UserPage = () => {
           placeholder="Digite o novo username"
           style={{ marginLeft: '10px', padding: '5px' }}
         />
-        <button onClick={handleEditUsername} style={{ marginLeft: '10px', padding: '5px 10px' }}>Salvar Username</button>
+        <button className="px-6 py-2 bg-gray-400 text-white rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-2" onClick={handleEditUsername}>Salvar Username</button>
       </div>
 
       {/* Campo para editar a senha */}
-      <div style={{ marginBottom: '20px' }}>
+      <div style={{ marginBottom: '20px'}}>
         <label>Alterar Password:</label>
         <input
           type="password"
@@ -121,7 +143,7 @@ const UserPage = () => {
           placeholder="Digite a nova senha"
           style={{ marginLeft: '10px', padding: '5px' }}
         />
-        <button onClick={handleEditPassword} style={{ marginLeft: '10px', padding: '5px 10px' }}>Salvar Password</button>
+        <button className="px-6 py-2 bg-gray-400 text-white rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-2" onClick={handleEditPassword} style={{ marginLeft: '10px', padding: '5px 10px' }}>Salvar Password</button>
       </div>
 
       {/* Exibição de mensagem */}
@@ -132,10 +154,15 @@ const UserPage = () => {
       )}
 
       {/* Botão de logout */}
-      <button onClick={handleGoBack} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'gray', color: 'white' }}>Voltar</button>
-      <button onClick={handleLogout} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'red', color: 'white' }}>Logout</button>
+      <button className="px-6 py-2 bg-gray-400 text-white rounded-md shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 m-2" onClick={handleGoBack}>Voltar</button>
+      <button className="px-6 py-2 bg-red-400 text-white rounded-md shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 m-2" onClick={handleLogout}>Logout</button>
+    </div>
     </div>
   );
 };
 
 export default withAuth(UserPage);
+
+//style={{ marginLeft: '10px', padding: '5px 10px' }}
+//style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'gray', color: 'white' }}
+// style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: 'red', color: 'white' }}
