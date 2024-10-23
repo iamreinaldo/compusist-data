@@ -255,7 +255,7 @@ const ClientePage = () => {
 
       {/* Se o cliente tiver atributos, exibi-los */}
       {atributos ? (
-        <div style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
+        <div style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px', margin: '2px' }}>
         <div>
           <br />
           <h2 className='text-gray-700'><strong>Informações do Cliente</strong></h2>
@@ -303,7 +303,7 @@ const ClientePage = () => {
       )}
 
       {showForm && (
-        <div style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px' }}>
+        <div style={{ width: '300px', backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px', margin:'3px' }}>
         <form className='text-gray-700' onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
           <label>
             É um cliente de redes? (Network Customer):
