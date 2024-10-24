@@ -1,10 +1,10 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-const RegisterPage = () => {
+const RegisterPageContent = () => {
   const searchParams = useSearchParams();
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -27,10 +27,10 @@ const RegisterPage = () => {
     const userData = { name, username, password };
 
     try {
-      const response = await fetch('http://187.103.0.132:43940/users/',{
+      const response = await fetch('http://187.103.0.132:43940/users/', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
       });
@@ -41,12 +41,10 @@ const RegisterPage = () => {
         }, 2000);
       } else {
         const errorData = await response.json();
-        setMessage(`Erro ao cadastrar o usuário: ${errorData.detail}`)
-        
+        setMessage(`Erro ao cadastrar o usuário: ${errorData.detail}`);
       }
-
     } catch (error) {
-      setMessage(`Erro ao cadastrar o usuário. Tente novamente.`);
+      setMessage('Erro ao cadastrar o usuário. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -105,6 +103,14 @@ const RegisterPage = () => {
         </form>
       </div>
     </div>
+  );
+};
+
+const RegisterPage = () => {
+  return (
+    <Suspense fallback={<div>Carregando dados do formulário...</div>}>
+      <RegisterPageContent />
+    </Suspense>
   );
 };
 

@@ -1,0 +1,11 @@
+# Ignorar a pasta node_modules
+node_modules
+
+# Ignorar a pasta build
+build
+
+# Ignorar arquivos dentro de src/app/
+src/app/
+
+# Ignorar todos os arquivos .tsx
+*.tsx

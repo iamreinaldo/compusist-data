@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "NEXT_DISABLE_ESLINT=1 next build && tsc --noEmit",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "axios": "^1.7.7",

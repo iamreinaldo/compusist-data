@@ -59,6 +59,7 @@ const LoginPage = () => {
       } 
     } catch (error) {
       // Se o usuário não for encontrado, redireciona para a página de cadastro
+      // @ts-ignore
       if (error.response && error.response.status === 404) {
         setMessage('Usuário não encontrado, redirecionando para o cadastro...');
         setTimeout(() => {

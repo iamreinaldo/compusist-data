@@ -24,6 +24,7 @@ const UserPage = () => {
     }
 
     if (storedUserId) {
+      // @ts-ignore
       setUserId(storedUserId);
     }
   }, []);

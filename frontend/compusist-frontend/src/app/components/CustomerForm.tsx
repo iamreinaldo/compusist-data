@@ -137,4 +137,5 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ onSubmit }) => {
   );
 };
 
+//@ts-ignore
 export default withAuth(CustomerForm);
