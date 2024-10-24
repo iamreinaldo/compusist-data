@@ -8,7 +8,7 @@ from schemas import customer_in
 from views import views
 from services import services
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:1309@localhost:1313/compusist'
+SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:1309@localhost:45432/compusist'
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = customers_bd.Base

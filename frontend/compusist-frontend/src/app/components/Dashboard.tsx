@@ -24,7 +24,7 @@ const Dashboard = () => {
 
     const buscarClientes = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/customers/`);
+        const response = await axios.get(`http://187.103.0.132:43940/customers/`);
         setClientes(response.data);
       } catch (error) {
         console.error('Erro ao buscar clientes:', error);

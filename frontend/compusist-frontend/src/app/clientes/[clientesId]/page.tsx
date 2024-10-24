@@ -39,7 +39,7 @@ const ClientePage = () => {
     if (clienteId) {
       const fetchCliente = async () => {
         try {
-          const responseCliente = await axios.get(`http://localhost:8000/customers/${clienteId}`, {
+          const responseCliente = await axios.get(`http://187.103.0.132:43940/customers/${clienteId}`, {
             headers: {
               'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
             }
@@ -47,7 +47,7 @@ const ClientePage = () => {
           setCliente(responseCliente.data);
           
           // Buscar os atributos do cliente
-          const responseAtributos = await axios.get(`http://localhost:8000/customers/attributes/${clienteId}`, {
+          const responseAtributos = await axios.get(`http://187.103.0.132:43940/customers/attributes/${clienteId}`, {
             headers: {
               'Authorization': `Bearer ${token}` // Adiciona o token ao cabeçalho
             }
@@ -107,7 +107,7 @@ const ClientePage = () => {
   
     try {
       if (isEditing) {
-        const response = await fetch(`http://localhost:8000/customers/attributes/${clienteId}`, {
+        const response = await fetch(`http://187.103.0.132:43940/customers/attributes/${clienteId}`, {
           method: 'PATCH',
           headers:{
             'Authorization': `Bearer ${token}`, // Adiciona o token ao cabeçalho
@@ -125,7 +125,7 @@ const ClientePage = () => {
           window.location.reload(); // Recarregar a página após sucesso
         }
       } else {
-        const response = await fetch('http://localhost:8000/customers/attributes', {
+        const response = await fetch('http://187.103.0.132:43940/customers/attributes', {
           method: 'POST',
           headers:{
             'Authorization': `Bearer ${token}`, // Adiciona o token ao cabeçalho
@@ -172,7 +172,7 @@ const ClientePage = () => {
     
     if (confirmed) {
       try {
-        const response = await axios.delete(`http://localhost:8000/customers/attributes/${clienteId}`);
+        const response = await axios.delete(`http://187.103.0.132:43940/customers/attributes/${clienteId}`);
         
         if (response.status === 200 || response.status === 204) {
           window.location.reload(); // Recarrega a página após a exclusão bem-sucedida

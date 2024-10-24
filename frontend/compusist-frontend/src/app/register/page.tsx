@@ -27,7 +27,7 @@ const RegisterPage = () => {
     const userData = { name, username, password };
 
     try {
-      const response = await fetch('http://localhost:8000/users/',{
+      const response = await fetch('http://187.103.0.132:43940/users/',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

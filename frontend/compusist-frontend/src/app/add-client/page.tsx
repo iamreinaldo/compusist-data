@@ -14,7 +14,7 @@ const AddClient = () => {
 
     const handleCustomerSubmit = async (customerData: { name: string; cnpj: string; contact: string; address: string }) => {
       try {
-        const response = await fetch('http://localhost:8000/customers/', {
+        const response = await fetch('http://187.103.0.132:43940/customers/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ const UserPage = () => {
     }
   }, []);
 
-  const apiUrl = userId ? `http://localhost:8000/users/${userId}` : null;
+  const apiUrl = userId ? `http://187.103.0.132:43940/users/${userId}` : null;
 
   const handleEditUsername = async () => {
     if (newUsername && apiUrl) {

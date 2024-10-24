@@ -38,7 +38,7 @@ const LoginPage = () => {
 
 
     try {
-      const response = await axios.post('http://localhost:8000/users/login/', userData, {
+      const response = await axios.post('http://187.103.0.132:43940/users/login/', userData, {
         headers: {
           'Content-Type': 'application/json',
         },
