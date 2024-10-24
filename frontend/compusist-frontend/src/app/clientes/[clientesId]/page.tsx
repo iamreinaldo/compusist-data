@@ -84,9 +84,9 @@ const ClientePage = () => {
     setShowForm(true);
   };
 
-  const handleCancel = () => {
-    setShowForm(false); // Fecha o formulário
-  };
+  // const handleCancel = () => {
+  //   setShowForm(false); // Fecha o formulário
+  // };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
